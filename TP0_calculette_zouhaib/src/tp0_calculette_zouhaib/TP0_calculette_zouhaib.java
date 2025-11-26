@@ -4,76 +4,73 @@
  */
 package tp0_calculette_zouhaib;
 import java.util.Scanner;
-/**
- *
- * @author zouhaib mahamoud
- */
+
 public class TP0_calculette_zouhaib {
-
-/*
- * Auteur : Zouhaib
- * Rôle : Calculette simple avec choix d'opérateur
- * Date : 2025
-*/
-
-
-
-public class TP0_calculette {
 
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
 
+        // ---- 1. Affichage du menu ----
         System.out.println("Please enter the operator:");
         System.out.println("1) add");
-        System.out.println("2) subtract");
+        System.out.println("2) substract");
         System.out.println("3) multiply");
         System.out.println("4) divide");
         System.out.println("5) modulo");
 
+        // ---- 2. Lecture du choix ----
+        System.out.println("Your choice :");
         int operateur = sc.nextInt();
 
-        // Test de validité de l'opérateur
+        // ---- 3. Vérification opérateur ----
         if (operateur < 1 || operateur > 5) {
-            System.out.println("Erreur : opérateur invalide.");
-            return;
+            System.out.println("Erreur : opérateur invalide. Veuillez choisir entre 1 et 5.");
+            return;   // Stoppe le programme
         }
 
+        // ---- 4. Saisie des deux opérandes ----
         System.out.println("Please enter the first number:");
         int operande1 = sc.nextInt();
 
         System.out.println("Please enter the second number:");
         int operande2 = sc.nextInt();
 
-        int result = 0;
+        int result = 0; // Variable de résultat
 
+        // ---- 5. Calcul selon l'opération ----
         switch (operateur) {
-            case 1:
+
+            case 1: // addition
                 result = operande1 + operande2;
                 break;
-            case 2:
+
+            case 2: // soustraction
                 result = operande1 - operande2;
                 break;
-            case 3:
+
+            case 3: // multiplication
                 result = operande1 * operande2;
                 break;
-            case 4:
+
+            case 4: // division
                 if (operande2 == 0) {
-                    System.out.println("Erreur : division par zéro impossible.");
+                    System.out.println("Erreur : division par zéro impossible !");
                     return;
                 }
                 result = operande1 / operande2;
                 break;
-            case 5:
+
+            case 5: // modulo
                 if (operande2 == 0) {
-                    System.out.println("Erreur : modulo par zéro impossible.");
+                    System.out.println("Erreur : modulo par zéro impossible !");
                     return;
                 }
                 result = operande1 % operande2;
                 break;
         }
 
+        // ---- 6. Affichage du résultat ----
         System.out.println("The result is : " + result);
     }
 }
-
