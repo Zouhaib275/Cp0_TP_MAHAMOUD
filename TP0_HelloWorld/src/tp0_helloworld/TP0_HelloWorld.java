@@ -4,7 +4,6 @@
  */
 package tp0_helloworld;
 
-import java.io.PrintStream;
 import java.util.Scanner;
 
 /**
