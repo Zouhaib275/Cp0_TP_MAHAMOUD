@@ -14,12 +14,15 @@ public class Jeu1 extends javax.swing.JFrame {
     /**
      * Creates new form Jeu1
      */
-    public Jeu1() {
-        initComponents();
-        jeu = new tete_du_jeu_zouhaib();   // création de la logique de jeu
-        rafraichirAffichageChiffres();     // on affiche 0 0 0 0
-        texte_tentatives.setText(" 0 sur " + jeu.getNbTentativesMax());
-        texte_score.setText("Tentatives");
+    public Jeu1(int tentativesMax) {
+    initComponents();
+    jeu = new tete_du_jeu_zouhaib(tentativesMax);
+    rafraichirAffichageChiffres();
+    texte_tentatives.setText(" 0 sur " + jeu.getNbTentativesMax());
+    texte_score.setText("Tentatives");
+
+    texte_intro.setText("Le jeu consiste à trouver le code du cadenas en " 
+        + tentativesMax + " tentatives.");
     }
     private void rafraichirAffichageChiffres() {
         texte_chiffre_0.setText(" " + jeu.getProposition(0));
@@ -54,6 +57,7 @@ public class Jeu1 extends javax.swing.JFrame {
 
         bouton_tester.setEnabled(true);
     }
+    
       /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -90,7 +94,7 @@ public class Jeu1 extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        texte_intro.setText("trouver le bon code en moins de 5 tentatives  ");
+        texte_intro.setText("Le jeu consiste à trouver le code du cadenas en");
         getContentPane().add(texte_intro, new org.netbeans.lib.awtextra.AbsoluteConstraints(86, 6, 450, -1));
 
         texte_lbl_nb_chiffres_exacts.setText("Nombre de chiffres exact:      ");
@@ -141,7 +145,7 @@ public class Jeu1 extends javax.swing.JFrame {
                                 up_chiffre_4ActionPerformed(evt);
                             }
                         });
-                        getContentPane().add(up_chiffre_4, new org.netbeans.lib.awtextra.AbsoluteConstraints(285, 22, -1, -1));
+                        getContentPane().add(up_chiffre_4, new org.netbeans.lib.awtextra.AbsoluteConstraints(285, 22, 70, -1));
 
                         texte_score.setText("tentatives");
                         getContentPane().add(texte_score, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 178, -1, -1));
@@ -191,7 +195,7 @@ public class Jeu1 extends javax.swing.JFrame {
                                 down_chiffre_4ActionPerformed(evt);
                             }
                         });
-                        getContentPane().add(down_chiffre_4, new org.netbeans.lib.awtextra.AbsoluteConstraints(285, 164, -1, -1));
+                        getContentPane().add(down_chiffre_4, new org.netbeans.lib.awtextra.AbsoluteConstraints(285, 164, 70, -1));
 
                         texte_chiffre_3.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
                         texte_chiffre_3.setText("  0");
@@ -280,13 +284,24 @@ public class Jeu1 extends javax.swing.JFrame {
 
         texte_tentatives.setText(" " + jeu.getNbTentatives() + " sur " + jeu.getNbTentativesMax());
 
+       // SI GAGNÉ
         if (jeu.estGagne()) {
-            texte_score.setText("Bravo, vous avez gagné !");
+            int[] code = jeu.getCodeSecret();
+            texte_score.setText("Bravo ! Code secret : " 
+                + code[0] + " " + code[1] + " " + code[2] + " " + code[3]);
             desactiverBoutons();
-        } else if (jeu.partieTerminee()) {
-            texte_score.setText("Dommage, partie terminée.");
+        }
+
+        // SI PERDU
+        else if (jeu.partieTerminee()) {
+            int[] code = jeu.getCodeSecret();
+            texte_score.setText("Perdu ! Code secret : " 
+                + code[0] + " " + code[1] + " " + code[2] + " " + code[3]);
             desactiverBoutons();
-        } else {
+        }
+
+        // SINON (continuer le jeu)
+        else {
             texte_score.setText("Tentatives");
         }
     }//GEN-LAST:event_bouton_testerActionPerformed
@@ -299,27 +314,7 @@ public class Jeu1 extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Jeu1().setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bouton_recommencer;

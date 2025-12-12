@@ -15,33 +15,34 @@ public class tete_du_jeu_zouhaib {
     private final int[] combinaisonSecrete = new int[NB_CHIFFRES];
     private final int[] proposition = new int[NB_CHIFFRES];
 
-    private final int nbTentativesMax = 5;
+    private  int nbTentativesMax = 6;
+    
     private int nbTentatives = 0;
     private boolean gagne = false;
 
-    public tete_du_jeu_zouhaib() {
-        nouvellePartie();
-    }
+    public tete_du_jeu_zouhaib(int tentativesMax) {
+       nbTentativesMax = tentativesMax;
+       nouvellePartie();
+}
 
     // -----------------------------------------------------------------
-    //      GESTION DE LA PARTIE
+    //     
     // -----------------------------------------------------------------
 
     public void nouvellePartie() {
         java.util.Random r = new java.util.Random();
         for (int i = 0; i < NB_CHIFFRES; i++) {
-            combinaisonSecrete[i] = r.nextInt(10);  // 0..9
-            proposition[i] = 0;                     // chiffres affichés au début
+            combinaisonSecrete[i] = r.nextInt(10);  
+            proposition[i] = 0;                     
         }
         nbTentatives = 0;
         gagne = false;
 
-        // Pour déboguer, tu peux décommenter :
-        // System.out.println("Secret = " + java.util.Arrays.toString(combinaisonSecrete));
+        
     }
 
     // -----------------------------------------------------------------
-    //      GESTION DES CHIFFRES AFFICHÉS (proposition du joueur)
+    //   
     // -----------------------------------------------------------------
 
     public void incrementerChiffre(int index) {
@@ -60,7 +61,7 @@ public class tete_du_jeu_zouhaib {
     }
 
     // -----------------------------------------------------------------
-    //      TEST DE LA PROPOSITION
+    //      
     // -----------------------------------------------------------------
 
     public Resultat tester() {
@@ -95,7 +96,7 @@ public class tete_du_jeu_zouhaib {
     }
 
     // -----------------------------------------------------------------
-    //      INFOS POUR L'IHM
+    //  
     // -----------------------------------------------------------------
 
     public boolean estGagne() {
@@ -113,9 +114,11 @@ public class tete_du_jeu_zouhaib {
     public int getNbTentativesMax() {
         return nbTentativesMax;
     }
-
+    public int[] getCodeSecret() {
+        return combinaisonSecrete;
+    }
     // -----------------------------------------------------------------
-    //      CLASSE RESULTAT
+    //    
     // -----------------------------------------------------------------
 
     public static class Resultat {
