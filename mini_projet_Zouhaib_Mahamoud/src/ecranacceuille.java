@@ -49,7 +49,7 @@ public class ecranacceuille extends javax.swing.JFrame {
         });
         getContentPane().add(Jouer, new org.netbeans.lib.awtextra.AbsoluteConstraints(163, 163, -1, -1));
 
-        combo_difficulte.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Facile", "Normal", "Difficile" }));
+        combo_difficulte.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Facile", "Normal", "Difficile", "Entraînement" }));
         combo_difficulte.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 combo_difficulteActionPerformed(evt);
@@ -70,16 +70,18 @@ public class ecranacceuille extends javax.swing.JFrame {
 
         if (niveau.equals("Facile")) {
             tentativesMax = 8;
-        } else if (niveau.equals("Normal")) {
+        } 
+        else if (niveau.equals("Normal")) {
             tentativesMax = 6;
-        } else {
-            tentativesMax = 4; 
+        }
+        else if (niveau.equals("Difficile")) {
+            tentativesMax = 4;
+        }
+        else {
+          tentativesMax = 999; // Entraînement = quasi illimité
         }
 
-        
         new Jeu1(tentativesMax).setVisible(true);
-
-        
         this.dispose();
     }//GEN-LAST:event_JouerActionPerformed
 

@@ -2,7 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
+import java.awt.Color;
+import javax.swing.Timer;
 /**
  *
  * @author zouhaib mahamoud
@@ -14,15 +15,35 @@ public class Jeu1 extends javax.swing.JFrame {
     /**
      * Creates new form Jeu1
      */
+    private Timer timerClignote;
+    private boolean etatVisible = true;
+    
+    private int parties = 0;
+    private int victoires = 0;
+    private java.util.HashSet<String> combinaisonsTestees = new java.util.HashSet<>();
+    private boolean chiffreModifie = false;
     public Jeu1(int tentativesMax) {
-    initComponents();
-    jeu = new tete_du_jeu_zouhaib(tentativesMax);
-    rafraichirAffichageChiffres();
-    texte_tentatives.setText(" 0 sur " + jeu.getNbTentativesMax());
-    texte_score.setText("Tentatives");
+        initComponents();
+        jeu = new tete_du_jeu_zouhaib(tentativesMax);
+        rafraichirAffichageChiffres();
+        texte_tentatives.setText(" 0 sur " + jeu.getNbTentativesMax());
+        texte_score.setText("Tentatives");
 
-    texte_intro.setText("Le jeu consiste à trouver le code du cadenas en " 
-        + tentativesMax + " tentatives.");
+        texte_intro.setText("Le jeu consiste à trouver le code du cadenas en " 
+            + tentativesMax + " tentatives.");
+        bouton_tester.setEnabled(false);
+        chiffreModifie = false;
+        if (tentativesMax >= 100) {
+        texte_intro.setText(
+            "Mode entraînement : trouvez le code du cadenas sans limite de tentatives."
+        );
+    } else {
+        texte_intro.setText(
+            "Le jeu consiste à trouver le code du cadenas en " 
+            + tentativesMax + " tentatives."
+    );
+}
+    
     }
     private void rafraichirAffichageChiffres() {
         texte_chiffre_0.setText(" " + jeu.getProposition(0));
@@ -57,7 +78,30 @@ public class Jeu1 extends javax.swing.JFrame {
 
         bouton_tester.setEnabled(true);
     }
-    
+    private String propositionToString() {
+    return jeu.getProposition(0) + " " + jeu.getProposition(1) + " "
+         + jeu.getProposition(2) + " " + jeu.getProposition(3);
+    }
+    private void lancerClignotement() {
+    if (timerClignote != null) timerClignote.stop();
+
+    timerClignote = new Timer(300, e -> {
+        etatVisible = !etatVisible;
+        texte_score.setVisible(etatVisible);
+    });
+    timerClignote.start();
+    }
+    private void majStats() {
+    lbl_stats.setText("Parties: " + parties + " | Victoires: " + victoires);
+    }
+    private String combinaisonActuelle() {
+    return jeu.getProposition(0) + "-"
+         + jeu.getProposition(1) + "-"
+         + jeu.getProposition(2) + "-"
+         + jeu.getProposition(3);
+    }
+   
+
       /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -90,12 +134,16 @@ public class Jeu1 extends javax.swing.JFrame {
         texte_tentatives = new javax.swing.JLabel();
         bouton_recommencer = new javax.swing.JButton();
         bouton_tester = new javax.swing.JButton();
+        bouton_aide = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        zone_historique = new javax.swing.JTextArea();
+        lbl_stats = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         texte_intro.setText("Le jeu consiste à trouver le code du cadenas en");
-        getContentPane().add(texte_intro, new org.netbeans.lib.awtextra.AbsoluteConstraints(86, 6, 450, -1));
+        getContentPane().add(texte_intro, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 0, 450, -1));
 
         texte_lbl_nb_chiffres_exacts.setText("Nombre de chiffres exact:      ");
         getContentPane().add(texte_lbl_nb_chiffres_exacts, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 237, -1, -1));
@@ -223,42 +271,73 @@ public class Jeu1 extends javax.swing.JFrame {
                         });
                         getContentPane().add(bouton_tester, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 90, -1, -1));
 
+                        bouton_aide.setText("Aide  ");
+                        bouton_aide.addActionListener(new java.awt.event.ActionListener() {
+                            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                bouton_aideActionPerformed(evt);
+                            }
+                        });
+                        getContentPane().add(bouton_aide, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 10, -1, -1));
+
+                        zone_historique.setColumns(20);
+                        zone_historique.setRows(5);
+                        jScrollPane1.setViewportView(zone_historique);
+
+                        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 320, 360, 90));
+
+                        lbl_stats.setText("Parties: 0 | Victoires: 0");
+                        getContentPane().add(lbl_stats, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 330, -1, -1));
+
                         pack();
                     }// </editor-fold>//GEN-END:initComponents
 
     private void up_chiffre_1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_up_chiffre_1ActionPerformed
         jeu.incrementerChiffre(0);
         rafraichirAffichageChiffres();
+        chiffreModifie = true;
+        bouton_tester.setEnabled(true);
     }//GEN-LAST:event_up_chiffre_1ActionPerformed
 
     private void up_chiffre_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_up_chiffre_2ActionPerformed
         jeu.incrementerChiffre(1);
         rafraichirAffichageChiffres();
+        chiffreModifie = true;
+        bouton_tester.setEnabled(true);
     }//GEN-LAST:event_up_chiffre_2ActionPerformed
 
     private void up_chiffre_3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_up_chiffre_3ActionPerformed
         jeu.incrementerChiffre(2);
-        rafraichirAffichageChiffres();   
+        rafraichirAffichageChiffres();
+        chiffreModifie = true;
+        bouton_tester.setEnabled(true);
     }//GEN-LAST:event_up_chiffre_3ActionPerformed
 
     private void up_chiffre_4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_up_chiffre_4ActionPerformed
         jeu.incrementerChiffre(3);
         rafraichirAffichageChiffres();
+        chiffreModifie = true;
+        bouton_tester.setEnabled(true);
     }//GEN-LAST:event_up_chiffre_4ActionPerformed
 
     private void down_chiffre_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_down_chiffre_2ActionPerformed
         jeu.decrementerChiffre(1);
         rafraichirAffichageChiffres();
+        chiffreModifie = true;
+        bouton_tester.setEnabled(true);
     }//GEN-LAST:event_down_chiffre_2ActionPerformed
 
     private void down_chiffre_3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_down_chiffre_3ActionPerformed
         jeu.decrementerChiffre(2);
         rafraichirAffichageChiffres();
+        chiffreModifie = true;
+        bouton_tester.setEnabled(true);
     }//GEN-LAST:event_down_chiffre_3ActionPerformed
 
     private void down_chiffre_4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_down_chiffre_4ActionPerformed
         jeu.decrementerChiffre(3);
         rafraichirAffichageChiffres();
+        chiffreModifie = true;
+        bouton_tester.setEnabled(true);
     }//GEN-LAST:event_down_chiffre_4ActionPerformed
 
     private void bouton_recommencerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bouton_recommencerActionPerformed
@@ -271,8 +350,17 @@ public class Jeu1 extends javax.swing.JFrame {
 
         texte_tentatives.setText(" 0 sur " + jeu.getNbTentativesMax());
         texte_score.setText("Tentatives");
-
+        zone_historique.setText("");
+        if (timerClignote != null) timerClignote.stop();
+        texte_score.setVisible(true);
+        etatVisible = true;
+        combinaisonsTestees.clear();
+        bouton_tester.setEnabled(false);
+        chiffreModifie = false;
+        
+        
         activerBoutons();
+        
     }//GEN-LAST:event_bouton_recommencerActionPerformed
 
     private void bouton_testerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bouton_testerActionPerformed
@@ -282,7 +370,12 @@ public class Jeu1 extends javax.swing.JFrame {
         texte_nb_chiffres_haut.setText(String.valueOf(res.getNbTropHaut()));
         texte_nb_chiffres_bas.setText(String.valueOf(res.getNbTropBas()));
 
-        texte_tentatives.setText(" " + jeu.getNbTentatives() + " sur " + jeu.getNbTentativesMax());
+        if (jeu.getNbTentativesMax() >= 100) {
+        texte_tentatives.setText(" Tentatives : " + jeu.getNbTentatives());
+        }
+        else {
+            texte_tentatives.setText(" " + jeu.getNbTentatives() + " sur " + jeu.getNbTentativesMax());
+        }
 
        // SI GAGNÉ
         if (jeu.estGagne()) {
@@ -290,6 +383,12 @@ public class Jeu1 extends javax.swing.JFrame {
             texte_score.setText("Bravo ! Code secret : " 
                 + code[0] + " " + code[1] + " " + code[2] + " " + code[3]);
             desactiverBoutons();
+            texte_score.setForeground(Color.GREEN); 
+            lancerClignotement();
+            parties++;
+            victoires++;
+            majStats();
+
         }
 
         // SI PERDU
@@ -298,18 +397,55 @@ public class Jeu1 extends javax.swing.JFrame {
             texte_score.setText("Perdu ! Code secret : " 
                 + code[0] + " " + code[1] + " " + code[2] + " " + code[3]);
             desactiverBoutons();
+            texte_score.setForeground(Color.RED);
+            lancerClignotement();
+            parties++;
+            majStats();
         }
 
         // SINON (continuer le jeu)
         else {
             texte_score.setText("Tentatives");
         }
+        zone_historique.append("Essai " + jeu.getNbTentatives()
+        + " : " + propositionToString()
+        + " -> Exact:" + res.getNbExact()
+        + " Haut:" + res.getNbTropHaut()
+        + " Bas:" + res.getNbTropBas()
+        + "\n");
+        String combinaison = combinaisonActuelle();
+
+        // Vérifier si la combinaison a déjà été testée
+        if (combinaisonsTestees.contains(combinaison)) {
+            texte_score.setText("Cette combinaison a déjà été testée!");
+            return; 
+        }
+      
+        
+        combinaisonsTestees.add(combinaison);
+        
+        bouton_tester.setEnabled(false);
+        chiffreModifie = false;
     }//GEN-LAST:event_bouton_testerActionPerformed
 
     private void down_chiffre_1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_down_chiffre_1ActionPerformed
         jeu.decrementerChiffre(0);
         rafraichirAffichageChiffres();
+        chiffreModifie = true;
+        bouton_tester.setEnabled(true);
     }//GEN-LAST:event_down_chiffre_1ActionPerformed
+
+    private void bouton_aideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bouton_aideActionPerformed
+        javax.swing.JOptionPane.showMessageDialog(this,
+        "Règles du jeu :\n"
+        + "- Trouver le code secret (4 chiffres).\n"
+        + "- Vous avez " + jeu.getNbTentativesMax() + " tentatives.\n"
+        + "- Après chaque test : Exact / Trop haut / Trop bas.",
+        "Aide",
+        javax.swing.JOptionPane.INFORMATION_MESSAGE
+    );
+
+    }//GEN-LAST:event_bouton_aideActionPerformed
 
     /**
      * @param args the command line arguments
@@ -317,12 +453,15 @@ public class Jeu1 extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bouton_aide;
     private javax.swing.JButton bouton_recommencer;
     private javax.swing.JButton bouton_tester;
     private javax.swing.JButton down_chiffre_1;
     private javax.swing.JButton down_chiffre_2;
     private javax.swing.JButton down_chiffre_3;
     private javax.swing.JButton down_chiffre_4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lbl_stats;
     private javax.swing.JLabel texte_chiffre_0;
     private javax.swing.JLabel texte_chiffre_1;
     private javax.swing.JLabel texte_chiffre_2;
@@ -340,5 +479,6 @@ public class Jeu1 extends javax.swing.JFrame {
     private javax.swing.JButton up_chiffre_2;
     private javax.swing.JButton up_chiffre_3;
     private javax.swing.JButton up_chiffre_4;
+    private javax.swing.JTextArea zone_historique;
     // End of variables declaration//GEN-END:variables
 }
